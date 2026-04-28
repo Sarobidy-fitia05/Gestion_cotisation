@@ -1,13 +1,7 @@
 <?php
 
-require_once __DIR__ . "/config/database.php";
-Use config\Database;
+header("Content-Type: application/json");
 
-$database = new Database();
-$db = $database->connection();
-
-if ($db) {
-    echo "Connexion réussie ✅";
-} else {
-    echo "Connexion échouée ❌";
-}
+echo json_encode([
+    "message" => "API running"
+]);
