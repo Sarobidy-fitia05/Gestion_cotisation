@@ -54,3 +54,37 @@ if ($method  === "POST") {
         ]);
     }
 }
+
+
+if ($method  === "PUT") {
+    $data = json_decode(file_get_contents("php://input"));
+
+    if (
+        !isset($data->id) 
+    ) {
+        echo json_encode([
+            "message"=>"id requise"
+        ]);
+        exit;
+    }
+    $query = "UPDATE members SET nom = :nom, prenom = :prenom, telephone = :telephone, adresse = :adresse,  poste = :poste)";
+
+    $stmt = $db->prepare($query);
+
+    $stmt->bindParam(":id", $data->id);
+    $stmt->bindParam(":nom", $data->nom);
+    $stmt->bindParam(":prenom", $data->prenom);
+    $stmt->bindParam(":telephone", $data->telephone);
+    $stmt->bindParam(":adresse", $data->adresse);
+    $stmt->bindParam(":poste", $data->poste);
+
+    if ($stmt->execute()) {
+        echo json_encode([
+            "message" => "modification du membre avec succès"
+        ]);
+    } else{
+        echo json_encode([
+            "message" => "Erreur lors de la modification"
+        ]);
+    }
+}
