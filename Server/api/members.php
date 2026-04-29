@@ -67,7 +67,7 @@ if ($method  === "PUT") {
         ]);
         exit;
     }
-    $query = "UPDATE members SET nom = :nom, prenom = :prenom, telephone = :telephone, adresse = :adresse,  poste = :poste)";
+    $query = "UPDATE members SET nom = :nom, prenom = :prenom, telephone = :telephone, adresse = :adresse,  poste = :poste WHERE id = :id";
 
     $stmt = $db->prepare($query);
 
@@ -87,4 +87,28 @@ if ($method  === "PUT") {
             "message" => "Erreur lors de la modification"
         ]);
     }
+}
+
+if ($method === "DELETE") {
+    $data = json_decode(file_get_contents("php://input"));
+
+    if (
+        !isset($data->id) 
+    ) {
+        echo json_encode([
+            "message"=>"id requise"
+        ]);
+        exit;
+    }
+
+    $query = "DELETE FROM members WHERE id = :id";
+     $stmt = $db->prepare($query);
+    $stmt->bindParam(":id", $data->id);
+
+    if ($stmt->execute()) {
+        echo json_encode(["message" => "Supression du membre avec succé"]);
+    } else {
+        echo json_encode(["message" => "Erreur de supression    "]);
+    }
+
 }
